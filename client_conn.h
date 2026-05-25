@@ -15,6 +15,8 @@
 #define MAX_LISTEN_BACKLOG 1
 #define BUFFER_SIZE 4096
 
+
+
 // Defino un fd (file decriptor, usado por c para leer un file-like object, en este caso una conexion del socket)
 void manejar_conexiones_clientes (int socket_cliente_fd, char *backend_host, char *backend_port_str);
 

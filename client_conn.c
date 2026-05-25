@@ -32,9 +32,10 @@ void manejar_conexiones_clientes(int socket_cliente_fd, char *backend_host, char
 
         // Por cada una tratamos de crear un socket, si falla pasamos a la siguiente
 
-        backend_socket_fd = socket (addrs_iter->ai_family,addrs_iter->ai_socktype,addrs_iter->ai_protocol);
+        backend_socket_fd = socket(addrs_iter->ai_family,addrs_iter->ai_socktype,addrs_iter->ai_protocol);
 
         if(backend_socket_fd == -1) {
+            printf("Fallo al abrir el socket\n");
             continue;
         }
 
@@ -60,23 +61,14 @@ void manejar_conexiones_clientes(int socket_cliente_fd, char *backend_host, char
     bytes_read = read(socket_cliente_fd, buffer, BUFFER_SIZE);
     write(backend_socket_fd, buffer, bytes_read);
 
+    // printf("%s\n", buffer);
+    // printf("-------------------------------\n");
+
     // Leemos todo lo que viene del backend y lo escribimos en el cliente
-    // while (bytes_read = read(backend_socket_fd, buffer, BUFFER_SIZE)) {
-    //     write(socket_cliente_fd, buffer, bytes_read);
-    // }
-    bytes_read = read(backend_socket_fd,buffer,BUFFER_SIZE);
-    // En el ultimo byte le digo que corte el string
-    buffer[bytes_read] = '\0';
+    while ((bytes_read = read(backend_socket_fd, buffer, BUFFER_SIZE))) {
+        write(socket_cliente_fd, buffer, bytes_read);
+    }
 
-    char respuesta[BUFFER_SIZE + 1000];
-
-    snprintf(respuesta, sizeof(respuesta),
-    "HTTP/1.1 200 OK\r\n"
-    "Server: Juani-proxy\r\n"
-    "X-Forwarded-For: "
-    "%s",
-    buffer);
-
-    write(socket_cliente_fd, respuesta, strlen(respuesta));
-
+    close(socket_cliente_fd)
+    
 }

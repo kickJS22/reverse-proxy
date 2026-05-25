@@ -36,9 +36,7 @@ int main(int argc, char *argv[]){
     getaddrinfo_error = getaddrinfo(NULL, server_port_str, &hstAndServ, &addrs);
 
     for (addr_iter = addrs; addr_iter != NULL; addr_iter = addr_iter->ai_next) {
-        server_socket_fd = socket(addr_iter->ai_family,
-                                  addr_iter->ai_socktype,
-                                  addr_iter->ai_protocol);
+        server_socket_fd = socket(addr_iter->ai_family, addr_iter->ai_socktype, addr_iter->ai_protocol);
         if (server_socket_fd == -1) {
             continue;
         }
@@ -46,9 +44,7 @@ int main(int argc, char *argv[]){
         so_reuseaddr = 1;
         setsockopt(server_socket_fd, SOL_SOCKET, SO_REUSEADDR, &so_reuseaddr, sizeof(so_reuseaddr));
 
-        if (bind(server_socket_fd,
-                 addr_iter->ai_addr,
-                 addr_iter->ai_addrlen) == 0)
+        if (bind(server_socket_fd,addr_iter->ai_addr,addr_iter->ai_addrlen) == 0)
         {
             break;
         }
@@ -72,6 +68,10 @@ int main(int argc, char *argv[]){
             perror("Could not accept");
             exit(1);
         }
+
+        printf("Se detecto una conexion nueva\n");
+        fflush(stdout);
+
         manejar_conexiones_clientes(client_socket_fd, backend_addr, backend_port_str);
         
     }

@@ -1,4 +1,5 @@
 #include "client_conn.h"
+#include <arpa/inet.h>
 
 int main(int argc, char *argv[]){
 
@@ -62,7 +63,7 @@ int main(int argc, char *argv[]){
     listen(server_socket_fd, MAX_LISTEN_BACKLOG);
     
 
-    while (1) { 
+    while (1) {
         struct sockaddr_in addr; 
         socklen_t addr_len = sizeof(addr);
         client_socket_fd = accept(server_socket_fd, (struct sockaddr *)&addr, &addr_len);
